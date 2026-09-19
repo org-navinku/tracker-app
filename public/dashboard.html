@@ -6,19 +6,6 @@
   <title>Tracker — Dashboard</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .suggest-wrap { position: relative; }
-    .suggest-chip {
-      display: inline-flex; align-items: center; gap: 0.3rem;
-      margin-top: 0.3rem; margin-bottom: 0.25rem;
-      font-size: 0.62rem; color: #2563eb;
-      background: #0e1628; border: 1px solid #1e3a6e;
-      border-radius: 20px; padding: 0.18rem 0.6rem;
-      cursor: pointer; user-select: none;
-      transition: background 0.15s;
-    }
-    .suggest-chip:hover { background: #162040; }
-    .suggest-chip::before { content: '📋'; font-size: 0.6rem; }
-
     /* ── Drag & drop ─────────────────────────────────────────── */
     #today-slots { flex-wrap: wrap; }
     .slot-pill[draggable="true"] { cursor: grab; }
@@ -120,11 +107,9 @@
 
     <div class="suggest-wrap">
       <input id="now" type="text" placeholder="NOW — what are you focused on?">
-      <span class="suggest-chip" id="now-chip" onclick="applySuggest('now')" style="display:none;"></span>
     </div>
     <div class="suggest-wrap">
       <input id="next" type="text" placeholder="NEXT — what comes after?">
-      <span class="suggest-chip" id="next-chip" onclick="applySuggest('next')" style="display:none;"></span>
     </div>
     <textarea id="drift" placeholder="Drift — what pulled you off track?"></textarea>
     <div class="score-row">
@@ -431,20 +416,22 @@
       if (suggestNow) {
         nowChip.textContent  = suggestNow;
         nowChip.style.display = 'inline-flex';
+        document.getElementById('now').placeholder = suggestNow;
       } else {
         nowChip.style.display = 'none';
+        document.getElementById('now').placeholder = 'NOW — what are you focused on?';
       }
 
       if (suggestNext) {
         nextChip.textContent  = suggestNext;
         nextChip.style.display = 'inline-flex';
+        document.getElementById('next').placeholder = suggestNext;
       } else {
         nextChip.style.display = 'none';
+        document.getElementById('next').placeholder = 'NEXT — what comes after?';
       }
 
-      // pre-fill only if field is empty
-      if (!document.getElementById('now').value  && suggestNow)  document.getElementById('now').value  = suggestNow;
-      if (!document.getElementById('next').value && suggestNext) document.getElementById('next').value = suggestNext;
+      // pre-fill only if field is empty and user clicks chip — do not auto-fill
     }
 
     function applySuggest(field) {
